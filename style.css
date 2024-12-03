@@ -37,6 +37,7 @@ h1 {
 #torso-image {
   bottom: 55px;
   left: 0;
+  z-index: 1;
 }
 
 #head-image {
@@ -44,7 +45,6 @@ h1 {
   left: 0px;
   width: 200px;
 }
-
 #hair-image {
   top: 50px;
   left: 00px;
