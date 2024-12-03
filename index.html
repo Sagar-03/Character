@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Character Creator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Custom Character Creator</h1>
+  <div id="character-container">
+    <!-- Character canvas -->
+    <div id="character-canvas">
+      <img id="torso-image" src="assets/Torso/Torso1.png" alt="Torso">
+      <img id="head-image" src="assets/Heads/Head1.png" alt="Head">
+      <img id="hair-image" src="assets/Hair/Hair1.png" alt="Hair">
+      <img id="eyebrows-image" src="assets/Eyebrows/Eyebrow1.png" alt="Eyebrows">
+      <img id="eyes-image" src="assets/Eyes/Eyes1.png" alt="Eyes">
+      <img id="eyewear-image" src="assets/Eyewear/Eyewear1.png" alt="Eyewear">
+      <img id="mouth-image" src="assets/Mouth/Mouth1.png" alt="Mouth">
+    </div>
+
+    <!-- Navigation buttons -->
+    <div class="controls">
+      <div>
+        <button id="prev-torso">◀</button>
+        Torso
+        <button id="next-torso">▶</button>
+      </div>
+      <div>
+        <button id="prev-head">◀</button>
+        Head
+        <button id="next-head">▶</button>
+      </div>
+      <div>
+        <button id="prev-hair">◀</button>
+        Hair
+        <button id="next-hair">▶</button>
+      </div>
+      <div>
+        <button id="prev-eyebrows">◀</button>
+        Eyebrows
+        <button id="next-eyebrows">▶</button>
+      </div>
+      <div>
+        <button id="prev-eyes">◀</button>
+        Eyes
+        <button id="next-eyes">▶</button>
+      </div>
+      <div>
+        <button id="prev-eyewear">◀</button>
+        Eyewear
+        <button id="next-eyewear">▶</button>
+      </div>
+      <div>
+        <button id="prev-mouth">◀</button>
+        Mouth
+        <button id="next-mouth">▶</button>
+      </div>
+    </div>
+
+    <!-- Download button -->
+    <button id="download-character">Download Character</button>
+  </div>
+
+  <canvas id="hidden-canvas" width="300" height="500" style="display: none;"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
