@@ -1,5 +1,3 @@
-// script.js
-
 // Initialize indices for each body part
 const indices = {
   torso: 0,
@@ -9,6 +7,17 @@ const indices = {
   eyes: 0,
   eyewear: 0,
   mouth: 0,
+};
+
+// Initialize positions for movable body parts
+const positions = {
+  torso: { top: 55 },
+  head: { top: 100 },
+  hair: { top: 50 },
+  eyebrows: { top: 70 },
+  eyes: { top: 90 },
+  eyewear: { top: 95 },
+  mouth: { top: 145 },
 };
 
 // Image sources for each body part
@@ -34,6 +43,12 @@ function updateImage(part) {
   imgElement.src = images[part][indices[part]];
 }
 
+// Update the position of a body part
+function updatePosition(part) {
+  const imgElement = document.getElementById(`${part}-image`);
+  imgElement.style.top = `${positions[part].top}px`;
+}
+
 // Add event listeners to navigation buttons
 Object.keys(indices).forEach((part) => {
   document.getElementById(`prev-${part}`).addEventListener("click", () => {
@@ -45,6 +60,19 @@ Object.keys(indices).forEach((part) => {
   document.getElementById(`next-${part}`).addEventListener("click", () => {
     indices[part] = (indices[part] + 1) % images[part].length;
     updateImage(part);
+  });
+});
+
+// Add event listeners for position control buttons
+Object.keys(positions).forEach((part) => {
+  document.getElementById(`up-${part}`).addEventListener("click", () => {
+    positions[part].top -= 10; // Move up by 10 pixels
+    updatePosition(part);
+  });
+
+  document.getElementById(`down-${part}`).addEventListener("click", () => {
+    positions[part].top += 10; // Move down by 10 pixels
+    updatePosition(part);
   });
 });
 
@@ -80,30 +108,36 @@ document.getElementById("download-character").addEventListener("click", () => {
 
   Promise.all(imagePromises)
     .then((results) => {
+      // Draw torso first
+      const torso = results.find(({ part }) => part === "torso");
+      ctx.drawImage(torso.img, 315, 429 + positions.torso.top - 55, 450, 450);
+
+      // Draw head behind torso
+      const head = results.find(({ part }) => part === "head");
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.drawImage(head.img, 340, 400 + positions.head.top - 100, 400, 400);
+      ctx.globalCompositeOperation = "source-over";
+
+      // Draw other elements
       results.forEach(({ img, part }) => {
-        // Adjust positions and sizes based on part for 1080x1080 canvas
-        switch (part) {
-          case "torso":
-            ctx.drawImage(img, 315, 540, 450, 450); // Adjusted to position torso correctly
-            break;
-          case "head":
-            ctx.drawImage(img, 340, 400, 400, 400); // Position head above torso
-            break;
-          case "hair":
-            ctx.drawImage(img, 315, 350, 450, 390); // Position hair above head
-            break;
-          case "eyebrows":
-            ctx.drawImage(img, 380, 420, 320, 290); // Position eyebrows on head
-            break;
-          case "eyes":
-            ctx.drawImage(img, 380, 470, 320, 290); // Position eyes below eyebrows
-            break;
-          case "eyewear":
-            ctx.drawImage(img, 380, 460, 320, 320); // Position eyewear overlapping eyes
-            break;
-          case "mouth":
-            ctx.drawImage(img, 440, 550, 200, 250); // Position mouth below eyes
-            break;
+        if (part !== "torso" && part !== "head") {
+          switch (part) {
+            case "hair":
+              ctx.drawImage(img, 315, 350 + positions.hair.top - 50, 450, 390);
+              break;
+            case "eyebrows":
+              ctx.drawImage(img, 380, 420 + positions.eyebrows.top - 70, 320, 290);
+              break;
+            case "eyes":
+              ctx.drawImage(img, 380, 470 + positions.eyes.top - 90, 320, 290);
+              break;
+            case "eyewear":
+              ctx.drawImage(img, 380, 460 + positions.eyewear.top - 95, 320, 320);
+              break;
+            case "mouth":
+              ctx.drawImage(img, 440, 550 + positions.mouth.top - 145, 200, 250);
+              break;
+          }
         }
       });
 
