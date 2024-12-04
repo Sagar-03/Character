@@ -32,7 +32,7 @@ const images = {
   eyes: Array.from({ length: 7 }, (_, i) => `assets/Eyes/Eyes${i + 1}.png`),
   eyewear: Array.from(
     { length: 4 },
-    (_, i) => `assets/Eyewear/Eyewear${i + 1}.png`
+    (_, i) => `assets/Eyewear/Eyewear${i + 0}.png`
   ),
   mouth: Array.from({ length: 8 }, (_, i) => `assets/Mouth/Mouth${i + 1}.png`),
 };
@@ -100,6 +100,7 @@ document.getElementById("download-character").addEventListener("click", () => {
   const imagePromises = drawOrder.map((part) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      img.crossOrigin = "Anonymous"; // Enable cross-origin access
       img.src = images[part][indices[part]];
       img.onload = () => resolve({ img, part });
       img.onerror = (err) => reject(err);
@@ -110,12 +111,20 @@ document.getElementById("download-character").addEventListener("click", () => {
     .then((results) => {
       // Draw torso first
       const torso = results.find(({ part }) => part === "torso");
-      ctx.drawImage(torso.img, 315, 429 + positions.torso.top - 55, 450, 450);
+      const torsoX = canvas.width / 2 - 225; // Center torso horizontally
+      const torsoY = canvas.height / 2 - 225 + positions.torso.top - 55; // Center torso vertically
+      ctx.drawImage(torso.img, torsoX, torsoY, 450, 450);
 
       // Draw head behind torso
       const head = results.find(({ part }) => part === "head");
       ctx.globalCompositeOperation = "destination-over";
-      ctx.drawImage(head.img, 340, 400 + positions.head.top - 100, 400, 400);
+      ctx.drawImage(
+        head.img,
+        canvas.width / 2 - 200,
+        torsoY - 30 + positions.head.top - 100,
+        400,
+        400
+      );
       ctx.globalCompositeOperation = "source-over";
 
       // Draw other elements
@@ -123,19 +132,49 @@ document.getElementById("download-character").addEventListener("click", () => {
         if (part !== "torso" && part !== "head") {
           switch (part) {
             case "hair":
-              ctx.drawImage(img, 315, 350 + positions.hair.top - 50, 450, 390);
+              ctx.drawImage(
+                img,
+                canvas.width / 2 - 225,
+                torsoY - 80 + positions.hair.top - 50,
+                450,
+                390
+              );
               break;
             case "eyebrows":
-              ctx.drawImage(img, 380, 420 + positions.eyebrows.top - 70, 320, 290);
+              ctx.drawImage(
+                img,
+                canvas.width / 2 - 160,
+                torsoY - 10 + positions.eyebrows.top - 70,
+                320,
+                290
+              );
               break;
             case "eyes":
-              ctx.drawImage(img, 380, 470 + positions.eyes.top - 90, 320, 290);
+              ctx.drawImage(
+                img,
+                canvas.width / 2 - 160,
+                torsoY + 40 + positions.eyes.top - 90,
+                320,
+                290
+              );
               break;
             case "eyewear":
-              ctx.drawImage(img, 380, 460 + positions.eyewear.top - 95, 320, 320);
+              ctx.drawImage(
+                img,
+                canvas.width / 2 - 160,
+                torsoY + 30 + positions.eyewear.top - 95,
+                320,
+                320
+              );
               break;
             case "mouth":
-              ctx.drawImage(img, 440, 550 + positions.mouth.top - 145, 200, 250);
+              ctx.drawImage(
+                img,
+                canvas.width / 2 - 100,
+                torsoY + 120 + positions.mouth.top - 145,
+                200,
+                250
+              );
               break;
           }
         }
